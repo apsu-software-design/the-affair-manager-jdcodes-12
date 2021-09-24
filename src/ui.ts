@@ -5,7 +5,7 @@
 import readlineSync = require('readline-sync'); //for easier repeated prompts
 import {AffairManager} from './manager';
 
-/**
+/**`
  * Function to run the UI
  */
 export function start() {
