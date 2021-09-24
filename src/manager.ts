@@ -2,20 +2,19 @@ class AffairManager {
 
     //Fields
     private name : string;
-    
+    //Affair List
+    //Members List
+    //Organization List
 
-    //Constructor
+    //====== Constructors ======//
     constructor(){
 
     }
 
-    //============  Getters  =============/
-    getName() { return this.name }
+    //============  Getters & Setters  =============/
+    getName() { return this.name; }
     
-
-
-    //============  Setters  =============/
-
+    setName() { return this.name; }
 
 
     //============= Adding Methods =============/

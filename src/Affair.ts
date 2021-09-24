@@ -4,7 +4,12 @@ class Affair {
     private zipcode : string;
     private date : string;
 
-    //============  Getters & Setters  =============//
+    constructor(name : string, zipcode : string, date : string){
+        this.name = name;
+        this.zipcode = zipcode;
+        this.date = date;
+    }
+
     getName() { return this.name; }
     getZipCode() { return this.zipcode; }
     getDate() { return this.date; }
@@ -13,5 +18,5 @@ class Affair {
     setZipCode(zipcode : string) { this.zipcode = zipcode; }
     setDate(date : string) { this.date = date; }
     
-
+    
 }

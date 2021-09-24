@@ -2,8 +2,12 @@ class Organization {
 
     private name : string;
 
-    //============  Getters & Setters  =============//
-    getName() { return this.name }
-    
+    constructor(name : string){
+        this.name = name;
+    }
 
+    getName() { return this.name }
+
+    setName(name : string) { this.name = name; }
+    
 }

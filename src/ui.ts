@@ -5,9 +5,10 @@
 import readlineSync = require('readline-sync'); //for easier repeated prompts
 import {AffairManager} from './manager';
 
-/**`
+/**
  * Function to run the UI
- */
+ */ 
+
 export function start() {
   showMainMenu(new AffairManager());
 }
@@ -63,6 +64,7 @@ function showNewMemberMenu(em:AffairManager) {
 /** 
  * Show menu to add a new affair. Will then show menu to add members to the affair
  */
+ 
 function showNewAffairMenu(em:AffairManager) {
   console.log('Add a new affair.');
   let affairName:string = readlineSync.question('  Title of affair: ');
