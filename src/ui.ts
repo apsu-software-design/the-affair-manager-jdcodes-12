@@ -90,6 +90,7 @@ function showNewOrganizationMenu(em:AffairManager) {
     showAddToOrganizationMenu(em, organizationName); //add affairs to new organization
     adding = readlineSync.question('Add another affair? (y/n): ');
   }
+
 }
 
 /**
@@ -116,9 +117,11 @@ function showAddToAffairMenu(em:AffairManager, affairName?:string) {
 /**
  * Show menu to look up a member. Will return undefined if no member selected.
  */
+
 function showSearchMembersMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('member');
-  return _searchListMenu('member', em.findMemberNames(query));
+  return _searchListMenu('member', (em.findMemberNames(query));
+  return undefined;
 }
 
 /**
@@ -126,7 +129,8 @@ function showSearchMembersMenu(em:AffairManager) : string|undefined {
  */
 function showSearchAffairsMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('affair');
-  return _searchListMenu('affair', em.findAffairNames(query));
+ // return _searchListMenu('affair', em.findAffairNames(query));
+ return undefined;
 }
 
 /**
@@ -134,7 +138,8 @@ function showSearchAffairsMenu(em:AffairManager) : string|undefined {
  */
 function showSearchOrganizationsMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('organization');
-  return _searchListMenu('organization', em.findOrganizationNames(query));
+ // return _searchListMenu('organization', em.findOrganizationNames(query));
+  return undefined;
 }
 
 /**
@@ -183,7 +188,7 @@ function showModifyAffairMenu(em:AffairManager, affairName?:string) {
     let response:number = parseInt(readlineSync.question('> '));
     if(response == 1){
       let newTitle = readlineSync.question('  New title: ');
-      em.modifyAffair(affairName, newTitle);
+      em.modifyAffair(affairName, newTitle, undefined);
     }
     else if(response == 2){
       let newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
@@ -215,6 +220,7 @@ function showAddToOrganizationMenu(em:AffairManager, organizationName?:string, a
 
   //add the affair to the organization
   em.addAffairToOrganization(affairName, organizationName);
+  
 }
 
 /**
@@ -222,7 +228,6 @@ function showAddToOrganizationMenu(em:AffairManager, organizationName?:string, a
  */
 function showListAffairMembersMenu(em:AffairManager) {
   let affairName = showSearchAffairsMenu(em);
-
   let members = em.getMembers(affairName);
 
   console.log('Members participating in this action:')

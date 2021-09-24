@@ -112,21 +112,24 @@ function showAddToAffairMenu(em, affairName) {
  */
 function showSearchMembersMenu(em) {
     var query = _promptForQuery('member');
-    return _searchListMenu('member', em.findMemberNames(query));
+    //return _searchListMenu('member', (em.findMemberNames(query));
+    return undefined;
 }
 /**
  * Show menu to look up an affair. Will return undefined if no affair selected.
  */
 function showSearchAffairsMenu(em) {
     var query = _promptForQuery('affair');
-    return _searchListMenu('affair', em.findAffairNames(query));
+    // return _searchListMenu('affair', em.findAffairNames(query));
+    return undefined;
 }
 /**
  * Show menu to look up a organization. Will return undefined if no organization selected.
  */
 function showSearchOrganizationsMenu(em) {
     var query = _promptForQuery('organization');
-    return _searchListMenu('organization', em.findOrganizationNames(query));
+    // return _searchListMenu('organization', em.findOrganizationNames(query));
+    return undefined;
 }
 /**
  * Helper function that prompts the user for a query.
@@ -167,7 +170,7 @@ function showModifyAffairMenu(em, affairName) {
         var response = parseInt(readlineSync.question('> '));
         if (response == 1) {
             var newTitle = readlineSync.question('  New title: ');
-            em.modifyAffair(affairName, newTitle);
+            em.modifyAffair(affairName, newTitle, undefined);
         }
         else if (response == 2) {
             var newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');

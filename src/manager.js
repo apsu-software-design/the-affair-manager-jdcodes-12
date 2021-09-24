@@ -1,38 +1,68 @@
+"use strict";
+exports.__esModule = true;
+exports.AffairManager = void 0;
+var Organization_1 = require("./Organization");
+var Affairs_1 = require("./Affairs");
+var Member_1 = require("./Member");
 var AffairManager = /** @class */ (function () {
     function AffairManager() {
+        this.organizationList = [];
+        this.affairsList = [];
+        this.membersList = [];
     }
-    //Fields
-    //============= Adding Methods =============/
     //--Used in UI.showNewMemberMenu(em : AffairManager)
     AffairManager.prototype.addMember = function (memberName, memberEmail) {
-        //Create member object??
+        this.membersList.push(new Member_1.Member(memberName, memberEmail));
     };
     //--Used inUI.ShowNewAffairMenu(em :AffairManager)
     AffairManager.prototype.addAffair = function (affairName, zipcode, date) {
-        //Create object??
+        this.affairsList.push(new Affairs_1.Affairs(affairName, zipcode, date));
     };
     //--Used in UI.showNewOrganizationMenu(em : AffairManager)
     AffairManager.prototype.addOrganization = function (organizationName) {
+        this.organizationList.push(new Organization_1.Organization(organizationName));
     };
     //Add a member to an event's roster
     //--Used in UI.showAddToAffairMenu(em : AffairManager, affairName? : string)
     AffairManager.prototype.addMemberToAffair = function (memberName, affairName) {
+        var selectedAffair;
+        //Search for the event
+        for (var i = 0; i < this.affairsList.length; i++) {
+            if (this.affairsList[i].getName() === affairName) {
+                selectedAffair = this.affairsList[i];
+                break;
+            }
+        }
+        //Add new member to that roster
+        selectedAffair.getEnrolledMembers().push(this.findMemberNames(memberName));
     };
     //============= Finding Methods =============//
     //Search Members list
     //--Used in UI.showSearchMembersMenu : string | undefined)
     AffairManager.prototype.findMemberNames = function (query) {
-        return "";
+        for (var i = 0; i < this.membersList.length; i++) {
+            if (query === this.membersList[i].getName()) {
+                return this.membersList[i];
+            }
+        }
     };
-    //Search Affairs List - return object?
+    //Search Affairs List, return the Affair Object
     //--Used in UI.showSearchAffairsMenu(em : AffairManager : string | undefined)
     AffairManager.prototype.findAffairNames = function (query) {
-        return "";
+        for (var i = 0; i < this.affairsList.length; i++) {
+            if (query === this.affairsList[i].getName()) {
+                return this.affairsList[i];
+            }
+        }
     };
     //Search Organizations from AM list
     //--Used in UI.showSearchOrganizationMenu(em : AffairManager) : string | undefined)
     AffairManager.prototype.findOrganizationNames = function (query) {
-        return "";
+        for (var i = 0; i < this.organizationList.length; i++) {
+            if (query === this.organizationList[i].getName()) {
+                return this.organizationList[i];
+            }
+        }
     };
     //============= Modify Methods =============//
     //--Used in UI.showModifyAffairMenu(em : AffairManager, affairName? : string)
@@ -44,6 +74,8 @@ var AffairManager = /** @class */ (function () {
     };
     //-- Used in UI.showListAffairMambers(em : AffairManager)
     AffairManager.prototype.getMembers = function (affairName) {
+        return null;
     };
     return AffairManager;
 }());
+exports.AffairManager = AffairManager;

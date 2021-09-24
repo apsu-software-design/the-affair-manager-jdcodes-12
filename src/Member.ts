@@ -1,18 +1,21 @@
-class Member {
-    
+export class Member {
+
+    //Fields
     private name : string;
     private email : string;
 
-    constructor(name : string, email : string){
+    //Constructors
+    constructor(name : string, email : string | undefined){
         this.name = name;
         this.email = email;
     }
 
-    getName() { return this.name; }
-    getEmail() { return this.email; }
-    
-    setName(name : string) { this.name = name; }
-    setEmail(email : string) { this.email = email; }
+    //Getters
+    getName() : string | undefined { return this.name }
+    getEmail() : string | undefined { return this.name }
 
+    //Setters
+    setName(name : string)   { this.name = name; }
+    setEmail(email : string) { this.email = email; }
 
 }
