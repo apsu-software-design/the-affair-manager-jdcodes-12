@@ -9,7 +9,7 @@ function start() {
 exports.start = start;
 function showMainMenu(em) {
     while (true) {
-        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  8. Exit");
+        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  9. Display Affairs\n  10. Display Members\n  11. Display Organizations\n  8. Exit");
         var response = readlineSync.question('> ');
         if (response === '8' || response.slice(0, 2).toLowerCase() === ':q') {
             break;
@@ -87,15 +87,15 @@ function showAddToAffairMenu(em, affairName) {
 }
 function showSearchMembersMenu(em) {
     var query = _promptForQuery('member');
-    return _searchListMenu('member', em.findMemberNames(query));
+    return _searchListMenu('member', (em.findMemberNames()));
 }
 function showSearchAffairsMenu(em) {
     var query = _promptForQuery('affair');
-    return _searchListMenu('affair', em.findAffairNames(query));
+    return _searchListMenu('affair', em.findAffairNames());
 }
 function showSearchOrganizationsMenu(em) {
     var query = _promptForQuery('organization');
-    return _searchListMenu('organization', em.findOrganizationNames(query));
+    return _searchListMenu('organization', em.findOrganizationNames());
 }
 function _promptForQuery(type) {
     console.log("Searching for a " + type + ".");
@@ -126,7 +126,7 @@ function showModifyAffairMenu(em, affairName) {
         var response = parseInt(readlineSync.question('> '));
         if (response == 1) {
             var newTitle = readlineSync.question('  New title: ');
-            em.modifyAffair(affairName, newTitle);
+            em.modifyAffair(affairName, newTitle, undefined);
         }
         else if (response == 2) {
             var newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
