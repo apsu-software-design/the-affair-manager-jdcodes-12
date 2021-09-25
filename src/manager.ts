@@ -38,8 +38,7 @@ export class AffairManager {
     addMemberToAffair(memberName : string, affairName : string | undefined){
         
         let selectedAffair : Affairs; 
-
-        //Search for the event
+        
         for(let i = 0; i < this.affairsList.length; i++)
         {
             if(this.affairsList[i].getName().toLowerCase() === affairName.toLowerCase()) 
@@ -49,8 +48,7 @@ export class AffairManager {
             }
         }
     
-        //Add new member to that roster
-        selectedAffair.getEnrolledMembers().push(this.findMemberNames(memberName));
+        selectedAffair.getEnrolledMembers().push(new Member(memberName, undefined));
     }
 
     //============= Finding Methods =============//
@@ -63,22 +61,14 @@ export class AffairManager {
 
     //Search Affairs List, return the Affair Object
     //--Used in UI.showSearchAffairsMenu(em : AffairManager : string | undefined)
-    findAffairNames(query : string): Affairs | undefined {
-      for(let i=0; i<this.affairsList.length; i++) {
-        if(query.toLowerCase() === this.affairsList[i].getName()){
-            return this.affairsList[i];
-        }
-      }
+    findAffairNames(): string[] | undefined {
+        return this.filterListForNames(this.affairsList);
     }
 
     //Search Organizations from AM list
     //--Used in UI.showSearchOrganizationMenu(em : AffairManager) : string | undefined)
-    findOrganizationNames(query : string): string[] | undefined {
-        for(let i=0; i<this.organizationList.length;i++){
-            if(query === this.organizationList[i].getName()){
-                 return this.organizationList[i].getName();
-            }
-        }
+    findOrganizationNames(): string[] | undefined {
+        return this.filterListForNames(this.organizationList);
     }
 
 
@@ -105,32 +95,18 @@ export class AffairManager {
         {
             extractedNames[i] = list[i].getName();
         }
-
+        console.log("Extracted names length: " + extractedNames.length);
         return extractedNames;
     }
 
     //-- Used in UI.showListAffairMambers(em : AffairManager)
     getMembers(affairName : string) : Member[] {
-        return null;
-    }
-    
-    //
-    displayMembers() : void {
-        for(let i=0; i<this.membersList.length; i++){
-            console.log(this.membersList[i].getName());
-        }
-    }
-
-    displayAffairs() : void {
+        let affairMemebrs : Member[];
         for(let i=0; i<this.affairsList.length; i++){
-            console.log(this.affairsList[i].getName());
+            if(affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()){
+                affairMemebrs = this.affairsList[i].getEnrolledMembers();
+            }
         }
+        return affairMemebrs;
     }
-
-    displayOrganizations() : void {
-        for(let i=0; i<this.organizationList.length; i++){
-            console.log(this.organizationList[i].getName());
-        }
-    }
-
 }

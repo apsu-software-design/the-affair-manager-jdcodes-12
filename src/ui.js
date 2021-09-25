@@ -45,15 +45,6 @@ function showMainMenu(em) {
             case '7':
                 showListAffairMembersMenu(em);
                 break;
-            case '9':
-                em.displayAffairs();
-                break;
-            case '10':
-                em.displayMembers();
-                break;
-            case '11':
-                em.displayOrganizations();
-                break;
             //case 8 handled above
             default: console.log('Invalid option!');
         }
@@ -121,24 +112,21 @@ function showAddToAffairMenu(em, affairName) {
  */
 function showSearchMembersMenu(em) {
     var query = _promptForQuery('member');
-    //return _searchListMenu('member', (em.findMemberNames(query));
-    return undefined;
+    return _searchListMenu('member', (em.findMemberNames()));
 }
 /**
  * Show menu to look up an affair. Will return undefined if no affair selected.
  */
 function showSearchAffairsMenu(em) {
     var query = _promptForQuery('affair');
-    // return _searchListMenu('affair', em.findAffairNames(query));
-    return undefined;
+    return _searchListMenu('affair', em.findAffairNames());
 }
 /**
  * Show menu to look up a organization. Will return undefined if no organization selected.
  */
 function showSearchOrganizationsMenu(em) {
     var query = _promptForQuery('organization');
-    // return _searchListMenu('organization', em.findOrganizationNames(query));
-    return undefined;
+    return _searchListMenu('organization', em.findOrganizationNames());
 }
 /**
  * Helper function that prompts the user for a query.

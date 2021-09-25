@@ -43,9 +43,6 @@ function showMainMenu(em:AffairManager) {
       case '5': showModifyAffairMenu(em); break;
       case '6': showAddToOrganizationMenu(em); break;
       case '7': showListAffairMembersMenu(em); break;
-      case '9': em.displayAffairs(); break;
-      case '10': em.displayMembers(); break;
-      case '11': em.displayOrganizations(); break;
       //case 8 handled above
       default: console.log('Invalid option!');
     }
@@ -133,7 +130,7 @@ function showSearchMembersMenu(em:AffairManager) : string|undefined {
  */
 function showSearchAffairsMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('affair');
- return _searchListMenu('affair', em.findAffairNames(query));
+  return _searchListMenu('affair', em.findAffairNames());
 }
 
 /**
@@ -141,8 +138,7 @@ function showSearchAffairsMenu(em:AffairManager) : string|undefined {
  */
 function showSearchOrganizationsMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('organization');
- // return _searchListMenu('organization', em.findOrganizationNames(query));
-  return undefined;
+  return _searchListMenu('organization', em.findOrganizationNames());
 }
 
 /**
@@ -171,7 +167,6 @@ function _searchListMenu(type:string, results:string[]) : string|undefined {
     return undefined;
   }
 }
-
 
 /**
  * Show menu to modify affair (title, time, or organization). Will show menu to search for an affair if none is provided.

@@ -26,43 +26,29 @@ var AffairManager = /** @class */ (function () {
     //--Used in UI.showAddToAffairMenu(em : AffairManager, affairName? : string)
     AffairManager.prototype.addMemberToAffair = function (memberName, affairName) {
         var selectedAffair;
-        //Search for the event
         for (var i = 0; i < this.affairsList.length; i++) {
-            if (this.affairsList[i].getName() === affairName) {
+            if (this.affairsList[i].getName().toLowerCase() === affairName.toLowerCase()) {
                 selectedAffair = this.affairsList[i];
                 break;
             }
         }
-        //Add new member to that roster
-        selectedAffair.getEnrolledMembers().push(this.findMemberNames(memberName));
+        selectedAffair.getEnrolledMembers().push(new Member_1.Member(memberName, undefined));
     };
     //============= Finding Methods =============//
     //Search Members list
     //--Used in UI.showSearchMembersMenu : string | undefined)
-    AffairManager.prototype.findMemberNames = function (query) {
-        for (var i = 0; i < this.membersList.length; i++) {
-            if (query === this.membersList[i].getName()) {
-                return this.membersList[i].getName();
-            }
-        }
+    AffairManager.prototype.findMemberNames = function () {
+        return this.filterListForNames(this.membersList); //Extract names from list, store in fitlered list
     };
     //Search Affairs List, return the Affair Object
     //--Used in UI.showSearchAffairsMenu(em : AffairManager : string | undefined)
-    AffairManager.prototype.findAffairNames = function (query) {
-        for (var i = 0; i < this.affairsList.length; i++) {
-            if (query.toLowerCase() === this.affairsList[i].getName()) {
-                return this.affairsList[i].getEnrolledMembers();
-            }
-        }
+    AffairManager.prototype.findAffairNames = function () {
+        return this.filterListForNames(this.affairsList);
     };
     //Search Organizations from AM list
     //--Used in UI.showSearchOrganizationMenu(em : AffairManager) : string | undefined)
-    AffairManager.prototype.findOrganizationNames = function (query) {
-        for (var i = 0; i < this.organizationList.length; i++) {
-            if (query === this.organizationList[i].getName()) {
-                return this.organizationList[i].getName();
-            }
-        }
+    AffairManager.prototype.findOrganizationNames = function () {
+        return this.filterListForNames(this.organizationList);
     };
     //============= Modify Methods =============//
     //--Used in UI.showModifyAffairMenu(em : AffairManager, affairName? : string)
@@ -72,25 +58,23 @@ var AffairManager = /** @class */ (function () {
     //-- Used in UI.showAddToOrganizationMenu(em : AffairManager, organizationName? : string, affairName? : string)
     AffairManager.prototype.addAffairToOrganization = function (affairName, organizationName) {
     };
+    AffairManager.prototype.filterListForNames = function (list) {
+        var extractedNames = [];
+        for (var i = 0; i < list.length; i++) {
+            extractedNames[i] = list[i].getName();
+        }
+        console.log("Extracted names length: " + extractedNames.length);
+        return extractedNames;
+    };
     //-- Used in UI.showListAffairMambers(em : AffairManager)
     AffairManager.prototype.getMembers = function (affairName) {
-        return null;
-    };
-    //
-    AffairManager.prototype.displayMembers = function () {
-        for (var i = 0; i < this.membersList.length; i++) {
-            console.log(this.membersList[i].getName());
-        }
-    };
-    AffairManager.prototype.displayAffairs = function () {
+        var affairMemebrs;
         for (var i = 0; i < this.affairsList.length; i++) {
-            console.log(this.affairsList[i].getName());
+            if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
+                affairMemebrs = this.affairsList[i].getEnrolledMembers();
+            }
         }
-    };
-    AffairManager.prototype.displayOrganizations = function () {
-        for (var i = 0; i < this.organizationList.length; i++) {
-            console.log(this.organizationList[i].getName());
-        }
+        return affairMemebrs;
     };
     return AffairManager;
 }());
