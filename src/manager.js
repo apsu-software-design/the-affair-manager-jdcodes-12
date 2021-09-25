@@ -42,7 +42,7 @@ var AffairManager = /** @class */ (function () {
     AffairManager.prototype.findMemberNames = function (query) {
         for (var i = 0; i < this.membersList.length; i++) {
             if (query === this.membersList[i].getName()) {
-                return this.membersList[i];
+                return this.membersList[i].getName();
             }
         }
     };
@@ -50,8 +50,8 @@ var AffairManager = /** @class */ (function () {
     //--Used in UI.showSearchAffairsMenu(em : AffairManager : string | undefined)
     AffairManager.prototype.findAffairNames = function (query) {
         for (var i = 0; i < this.affairsList.length; i++) {
-            if (query === this.affairsList[i].getName()) {
-                return this.affairsList[i];
+            if (query.toLowerCase() === this.affairsList[i].getName()) {
+                return this.affairsList[i].getEnrolledMembers();
             }
         }
     };
@@ -60,7 +60,7 @@ var AffairManager = /** @class */ (function () {
     AffairManager.prototype.findOrganizationNames = function (query) {
         for (var i = 0; i < this.organizationList.length; i++) {
             if (query === this.organizationList[i].getName()) {
-                return this.organizationList[i];
+                return this.organizationList[i].getName();
             }
         }
     };
@@ -75,6 +75,22 @@ var AffairManager = /** @class */ (function () {
     //-- Used in UI.showListAffairMambers(em : AffairManager)
     AffairManager.prototype.getMembers = function (affairName) {
         return null;
+    };
+    //
+    AffairManager.prototype.displayMembers = function () {
+        for (var i = 0; i < this.membersList.length; i++) {
+            console.log(this.membersList[i].getName());
+        }
+    };
+    AffairManager.prototype.displayAffairs = function () {
+        for (var i = 0; i < this.affairsList.length; i++) {
+            console.log(this.affairsList[i].getName());
+        }
+    };
+    AffairManager.prototype.displayOrganizations = function () {
+        for (var i = 0; i < this.organizationList.length; i++) {
+            console.log(this.organizationList[i].getName());
+        }
     };
     return AffairManager;
 }());

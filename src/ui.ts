@@ -8,7 +8,6 @@ import {AffairManager} from './manager';
 /**
  * Function to run the UI
  */ 
-
 export function start() {
   showMainMenu(new AffairManager());
 }
@@ -26,6 +25,9 @@ function showMainMenu(em:AffairManager) {
   5. Modify an affair
   6. Add an affair to an organization
   7. List affair members
+  9. Display Affairs
+  10. Display Members
+  11. Display Organizations
   8. Exit`);
 
     let response = readlineSync.question('> ')
@@ -41,6 +43,9 @@ function showMainMenu(em:AffairManager) {
       case '5': showModifyAffairMenu(em); break;
       case '6': showAddToOrganizationMenu(em); break;
       case '7': showListAffairMembersMenu(em); break;
+      case '9': em.displayAffairs(); break;
+      case '10': em.displayMembers(); break;
+      case '11': em.displayOrganizations(); break;
       //case 8 handled above
       default: console.log('Invalid option!');
     }
@@ -120,8 +125,7 @@ function showAddToAffairMenu(em:AffairManager, affairName?:string) {
 
 function showSearchMembersMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('member');
-  return _searchListMenu('member', (em.findMemberNames(query));
-  return undefined;
+  return _searchListMenu('member', (em.findMemberNames()));
 }
 
 /**
@@ -129,8 +133,7 @@ function showSearchMembersMenu(em:AffairManager) : string|undefined {
  */
 function showSearchAffairsMenu(em:AffairManager) : string|undefined {
   let query:string = _promptForQuery('affair');
- // return _searchListMenu('affair', em.findAffairNames(query));
- return undefined;
+ return _searchListMenu('affair', em.findAffairNames(query));
 }
 
 /**
@@ -168,6 +171,7 @@ function _searchListMenu(type:string, results:string[]) : string|undefined {
     return undefined;
   }
 }
+
 
 /**
  * Show menu to modify affair (title, time, or organization). Will show menu to search for an affair if none is provided.

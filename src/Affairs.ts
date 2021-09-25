@@ -6,7 +6,7 @@ export class Affairs{
     private name : string;
     private zipcode : string;
     private date : string;
-    private enrolledMembers : string[];
+    private enrolledMembers : Member[];
 
     //Constructors
     constructor(name : string, zipcode : string | undefined, date : string | undefined){
@@ -20,7 +20,7 @@ export class Affairs{
     getName() : string | undefined { return this.name; }
     getZipcode() : string | undefined { return this.zipcode; }
     getDate() : string | undefined { return this.date;  }
-    getEnrolledMembers() : string[] { return this.enrolledMembers; }
+    getEnrolledMembers() : Member[] { return this.enrolledMembers; }
 
     //Setters
     setName(name : string) { this.name = name; }

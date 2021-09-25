@@ -18,7 +18,7 @@ exports.start = start;
  */
 function showMainMenu(em) {
     while (true) { //run until we exit
-        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  8. Exit");
+        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  9. Display Affairs\n  10. Display Members\n  11. Display Organizations\n  8. Exit");
         var response = readlineSync.question('> ');
         if (response === '8' || response.slice(0, 2).toLowerCase() === ':q') {
             break; //stop looping, thus leaving method
@@ -44,6 +44,15 @@ function showMainMenu(em) {
                 break;
             case '7':
                 showListAffairMembersMenu(em);
+                break;
+            case '9':
+                em.displayAffairs();
+                break;
+            case '10':
+                em.displayMembers();
+                break;
+            case '11':
+                em.displayOrganizations();
                 break;
             //case 8 handled above
             default: console.log('Invalid option!');

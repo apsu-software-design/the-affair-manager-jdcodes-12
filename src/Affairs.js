@@ -18,11 +18,6 @@ var Affairs = /** @class */ (function () {
     Affairs.prototype.setName = function (name) { this.name = name; };
     Affairs.prototype.setZipcode = function (zipcode) { this.zipcode = zipcode; };
     Affairs.prototype.setDate = function (date) { this.date = date; };
-    //Utility Methods -- Do I even need this?
-    Affairs.prototype.viewEnrolledMembers = function () {
-        for (var i = 0; i < this.enrolledMembers.length; i++) {
-        }
-    };
     return Affairs;
 }());
 exports.Affairs = Affairs;
