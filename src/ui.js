@@ -5,7 +5,6 @@
 exports.__esModule = true;
 exports.start = void 0;
 var readlineSync = require("readline-sync"); //for easier repeated prompts
-var Affairs_1 = require("./Affairs");
 var manager_1 = require("./manager");
 /**
  * Function to run the UI
@@ -197,12 +196,12 @@ function showModifyAffairMenu(em, affairName) {
         if (response == 1) {
             var newTitle = readlineSync.question('  New title: ');
             em.modifyAffair(affairName, newTitle, undefined);
-            console.log("\nTitle changed to: " + affairName);
+            console.log("\nTitle changed...");
         }
         else if (response == 2) {
             var newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
             em.modifyAffair(affairName, undefined, newTime); //no name to change
-            console.log("\nTime changed to: " + newTime);
+            console.log("\nTime changed to...");
         }
         else if (response == 3) {
             showAddToOrganizationMenu(em, undefined, affairName);
@@ -250,8 +249,8 @@ function showListAffairMembersMenu(em) {
 function showListOrganizationAffairsMenu(em) {
     var organizationName = showSearchOrganizationsMenu(em);
     var affairs = em.getAffairs(organizationName);
-    console.log(":--: Organizations registered Affairs :--:");
-    for (var i = 0; i < Affairs_1.Affairs.length; i++) {
+    console.log("\n:--: Organizations registered Affairs :--:");
+    for (var i = 0; i < affairs.length; i++) {
         console.log("Name: " + affairs[i].getName());
         console.log("Zipcode: " + affairs[i].getZipcode());
         console.log("Date: " + affairs[i].getDate() + "\n");

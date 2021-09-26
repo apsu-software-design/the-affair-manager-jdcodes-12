@@ -208,12 +208,12 @@ function showModifyAffairMenu(em:AffairManager, affairName?:string) {
     if(response == 1){
       let newTitle = readlineSync.question('  New title: ');
       em.modifyAffair(affairName, newTitle, undefined);
-      console.log("\nTitle changed to: " + affairName);
+      console.log("\nTitle changed...");
     }
     else if(response == 2){
       let newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
       em.modifyAffair(affairName, undefined, newTime); //no name to change
-      console.log("\nTime changed to: " + newTime);
+      console.log("\nTime changed to...");
     }
     else if(response == 3){
       showAddToOrganizationMenu(em, undefined, affairName);
@@ -263,7 +263,7 @@ function showListOrganizationAffairsMenu(em : AffairManager){
   let organizationName = showSearchOrganizationsMenu(em);
   let affairs = em.getAffairs(organizationName);
 
-  console.log(":--: Organizations registered Affairs :--:");
+  console.log("\n:--: Organizations registered Affairs :--:");
   for(let i=0; i<affairs.length; i++){
     console.log("Name: " + affairs[i].getName());
     console.log("Zipcode: " + affairs[i].getZipcode());

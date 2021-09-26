@@ -115,7 +115,7 @@ export class AffairManager {
     //============= Modify Methods =============//
 
     //--Used in UI.showModifyAffairMenu(em : AffairManager, affairName? : string)
-    modifyAffair(affairName : string, newName : string = undefined, newTime : string = undefined){
+    modifyAffair(affairName : string, newName : string | undefined, newTime : string | undefined){
         let selectedAffair : Affairs;
 
         for(let i=0; i<this.affairsList.length; i++){
@@ -125,13 +125,15 @@ export class AffairManager {
         }
 
         //Edit Title
-        if(newName !== undefined){
+        if(newName !== undefined ){
             selectedAffair.setName(newName);
         }
-
-        if(newTime !== undefined){
+        
+        //Edit Time
+        if(newTime !== undefined) {
             selectedAffair.setDate(newTime);    
         }
+        
     }
 
 

@@ -90,8 +90,6 @@ var AffairManager = /** @class */ (function () {
     //============= Modify Methods =============//
     //--Used in UI.showModifyAffairMenu(em : AffairManager, affairName? : string)
     AffairManager.prototype.modifyAffair = function (affairName, newName, newTime) {
-        if (newName === void 0) { newName = undefined; }
-        if (newTime === void 0) { newTime = undefined; }
         var selectedAffair;
         for (var i = 0; i < this.affairsList.length; i++) {
             if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
@@ -102,6 +100,7 @@ var AffairManager = /** @class */ (function () {
         if (newName !== undefined) {
             selectedAffair.setName(newName);
         }
+        //Edit Time
         if (newTime !== undefined) {
             selectedAffair.setDate(newTime);
         }
@@ -143,6 +142,11 @@ var AffairManager = /** @class */ (function () {
             }
         }
     };
+    /**
+     * Doesn't work
+     * @param organizationName
+     * @returns
+     */
     AffairManager.prototype.getAffairs = function (organizationName) {
         for (var i = 0; i < this.organizationList.length; i++) {
             if (organizationName.toLowerCase() === this.organizationList[i].getName().toLowerCase()) {
