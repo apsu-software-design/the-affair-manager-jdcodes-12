@@ -3,6 +3,7 @@
 //@author James Church
 
 import readlineSync = require('readline-sync'); //for easier repeated prompts
+import { Affairs } from './Affairs';
 import {AffairManager} from './manager';
 
 /**
@@ -25,13 +26,11 @@ function showMainMenu(em:AffairManager) {
   5. Modify an affair
   6. Add an affair to an organization
   7. List affair members
-  9. Display Affairs
-  10. Display Members
-  11. Display Organizations
-  8. Exit`);
+  8. List organization affairs
+  9. Exit`);
 
     let response = readlineSync.question('> ')
-    if(response === '8' || response.slice(0,2).toLowerCase() === ':q'){
+    if(response === '9' || response.slice(0,2).toLowerCase() === ':q'){
       break; //stop looping, thus leaving method
     }
 
@@ -43,7 +42,11 @@ function showMainMenu(em:AffairManager) {
       case '5': showModifyAffairMenu(em); break;
       case '6': showAddToOrganizationMenu(em); break;
       case '7': showListAffairMembersMenu(em); break;
-      //case 8 handled above
+      case '8': showListOrganizationAffairsMenu(em); break;
+      case '10': em.displayRegisteredMembers(); break;
+      case '11': em.displayRegisteredAffairs(); break;
+      case '12': em.displayRegisteredOrganizations(); break;
+      //case 9 handled above
       default: console.log('Invalid option!');
     }
     console.log(''); //extra empty line for revisiting
@@ -51,16 +54,21 @@ function showMainMenu(em:AffairManager) {
 }
 
 /**
- * Show menu to add a new member
+ * Prompts to get Member data, adds member to memberList
  */
 function showNewMemberMenu(em:AffairManager) {
+
   console.log('Add a new member.');
   let name:string = readlineSync.question('  Name: ');
   let email:string = readlineSync.question('  Email: ');
 
-  em.addMember(name, email);
+  if(em.addMember(name, email) !== undefined){
+    console.log("User is already added...\n")
+  } else {
+    em.addMember(name, email);
+    console.log('User added!');
+  }
 
-  console.log('User added!');
 }
 
 /** 
@@ -68,30 +76,42 @@ function showNewMemberMenu(em:AffairManager) {
  */
  
 function showNewAffairMenu(em:AffairManager) {
+
   console.log('Add a new affair.');
   let affairName:string = readlineSync.question('  Title of affair: ');
   let zipcode:string = readlineSync.question('  Location (zip code): ');
   let date:string = readlineSync.question('  Date and time (ex: Jan 21 2017 13:00 PST): ');
 
-  em.addAffair(affairName, zipcode, date);
+  if(em.addAffair(affairName, zipcode, date) !== undefined){
+    console.log("Affair is already added...\n")
+  }
+  else {
+    em.addAffair(affairName, zipcode, date);
+    console.log("Affair added!\n")
+    showAddToAffairMenu(em, affairName); //add users to new affair
+  }
 
-  showAddToAffairMenu(em, affairName); //add users to new affair
 }
 
 /**
  * Show menu to add a new organization. Will then show menu to add affairs to the organization
  */
 function showNewOrganizationMenu(em:AffairManager) {
+
   console.log('Add a new organization.');
   let organizationName:string = readlineSync.question('  Title of organization: ');
 
-  em.addOrganization(organizationName);
-
-  let adding = readlineSync.question('Add affairs to organization? (y/n): ');
-  while(adding.toLowerCase().startsWith('y')){ //while adding members    
-    showAddToOrganizationMenu(em, organizationName); //add affairs to new organization
-    adding = readlineSync.question('Add another affair? (y/n): ');
+  if(em.addOrganization(organizationName) !== undefined){
+    console.log("Organization is already registered...\n");
   }
+  else{
+    em.addOrganization(organizationName);
+    let adding = readlineSync.question('Add affairs to organization? (y/n): ');
+    while(adding.toLowerCase().startsWith('y')){ //while adding members    
+      showAddToOrganizationMenu(em, organizationName); //add affairs to new organization
+      adding = readlineSync.question('Add another affair? (y/n): ');
+    }
+  } 
 
 }
 
@@ -99,7 +119,7 @@ function showNewOrganizationMenu(em:AffairManager) {
  * Show menu to add a member to an affair. Will repeat to add multiple members. Will show menu to search for an affair if none is provided.
  */
 function showAddToAffairMenu(em:AffairManager, affairName?:string) {
-  if(!affairName){
+  if(!affairName) {
     affairName = showSearchAffairsMenu(em);
     if(!affairName){ return }//if didn't select an affair
   }
@@ -145,7 +165,7 @@ function showSearchOrganizationsMenu(em:AffairManager) : string|undefined {
  * Helper function that prompts the user for a query.
  */
 function _promptForQuery(type: string): string {
-  console.log(`Searching for a ${type}.`)
+  console.log(`\nSearching for a ${type}.`)
   return readlineSync.question('Search query: ');
 }
 
@@ -155,15 +175,15 @@ function _promptForQuery(type: string): string {
  */
 function _searchListMenu(type:string, results:string[]) : string|undefined {
   if(results.length > 0) {
-    console.log('Results found: ');
+    console.log('\nResults found: ');
     let resultsDisplay = '  '+(results.map((item:string, idx:number) => `${idx+1}. ${item}`).join('\n  '));
     console.log(resultsDisplay);
     
-    let choiceIdx = parseInt(readlineSync.question(`Choose a ${type} (1-${results.length}): `)); //will covert to number or NaN
+    let choiceIdx = parseInt(readlineSync.question(`\nChoose a ${type} (1-${results.length}): `)); //will covert to number or NaN
 
     return results[choiceIdx-1]; //will return undefined if invalid index
   } else {
-    console.log('No results found.')
+    console.log('\nNo results found.')
     return undefined;
   }
 }
@@ -178,7 +198,7 @@ function showModifyAffairMenu(em:AffairManager, affairName?:string) {
   }
 
   while(true){ //run until we exit
-    console.log(`Edit affair '${affairName}'.
+    console.log(`\nEdit affair '${affairName}'.
   1. Change title
   2. Change time
   3. Add to organization
@@ -188,10 +208,12 @@ function showModifyAffairMenu(em:AffairManager, affairName?:string) {
     if(response == 1){
       let newTitle = readlineSync.question('  New title: ');
       em.modifyAffair(affairName, newTitle, undefined);
+      console.log("\nTitle changed to: " + affairName);
     }
     else if(response == 2){
       let newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
       em.modifyAffair(affairName, undefined, newTime); //no name to change
+      console.log("\nTime changed to: " + newTime);
     }
     else if(response == 3){
       showAddToOrganizationMenu(em, undefined, affairName);
@@ -220,7 +242,7 @@ function showAddToOrganizationMenu(em:AffairManager, organizationName?:string, a
   //add the affair to the organization
   em.addAffairToOrganization(affairName, organizationName);
   
-}
+ }
 
 /**
  * Show a list of members participating in an affair. Will show menu to search for an affair. Should include outputting member's email addresses.
@@ -229,8 +251,22 @@ function showListAffairMembersMenu(em:AffairManager) {
   let affairName = showSearchAffairsMenu(em);
   let members = em.getMembers(affairName);
 
-  console.log('Members participating in this action:')
-  console.log('  '+members.join('\n  ')+'\n');
-
+  console.log("\n:--: Members participating in this affair :--:")
+  for(let i=0; i<members.length; i++){
+    console.log("Name: " + members[i].getName());
+    console.log("Email: " + members[i].getEmail() + "\n");
+  }
   readlineSync.keyInPause('(Press any letter to continue)', {guide:false}); //so have time to read stuff
+}
+
+function showListOrganizationAffairsMenu(em : AffairManager){
+  let organizationName = showSearchOrganizationsMenu(em);
+  let affairs = em.getAffairs(organizationName);
+
+  console.log(":--: Organizations registered Affairs :--:");
+  for(let i=0; i<affairs.length; i++){
+    console.log("Name: " + affairs[i].getName());
+    console.log("Zipcode: " + affairs[i].getZipcode());
+    console.log("Date: " + affairs[i].getDate() + "\n");
+  }
 }

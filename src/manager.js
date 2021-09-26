@@ -10,33 +10,70 @@ var AffairManager = /** @class */ (function () {
         this.affairsList = [];
         this.membersList = [];
     }
-    //--Used in UI.showNewMemberMenu(em : AffairManager)
+    /**
+     * Option 1 - Add member to AffairManager's membersList : Array<Member>
+     */
     AffairManager.prototype.addMember = function (memberName, memberEmail) {
+        for (var i = 0; i < this.membersList.length; i++) {
+            if (memberName.toLowerCase() === this.membersList[i].getName().toLowerCase()) {
+                return this.membersList[i].getName();
+            }
+        }
         this.membersList.push(new Member_1.Member(memberName, memberEmail));
     };
-    //--Used inUI.ShowNewAffairMenu(em :AffairManager)
+    /**
+     * Option 2 - Add affair to AffairManager's affairsList : Array<Affairs>
+     */
     AffairManager.prototype.addAffair = function (affairName, zipcode, date) {
+        for (var i = 0; i < this.affairsList.length; i++) {
+            if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
+                return this.affairsList[i].getName();
+            }
+        }
         this.affairsList.push(new Affairs_1.Affairs(affairName, zipcode, date));
     };
-    //--Used in UI.showNewOrganizationMenu(em : AffairManager)
+    /**
+     * Option 3 - Add organization to AffairManager's organizationList : Array<Organization>
+     */
     AffairManager.prototype.addOrganization = function (organizationName) {
+        for (var i = 0; i < this.organizationList.length; i++) {
+            if (organizationName.toLowerCase() === this.organizationList[i].getName().toLowerCase()) {
+                return this.organizationList[i].getName();
+            }
+        }
         this.organizationList.push(new Organization_1.Organization(organizationName));
     };
-    //Add a member to an event's roster
-    //--Used in UI.showAddToAffairMenu(em : AffairManager, affairName? : string)
+    /**
+     * Option 4 -- Add an existing member to an affair
+     * @param memberName - a mamber's name
+     * @param affairName - an event's name
+     */
     AffairManager.prototype.addMemberToAffair = function (memberName, affairName) {
         var selectedAffair;
+        var selectedMember;
         for (var i = 0; i < this.affairsList.length; i++) {
             if (this.affairsList[i].getName().toLowerCase() === affairName.toLowerCase()) {
                 selectedAffair = this.affairsList[i];
                 break;
             }
         }
-        selectedAffair.getEnrolledMembers().push(new Member_1.Member(memberName, undefined));
+        for (var i = 0; i < this.membersList.length; i++) {
+            if (this.membersList[i].getName().toLowerCase() === memberName.toLowerCase()) {
+                selectedMember = this.membersList[i];
+                break;
+            }
+        }
+        if (selectedAffair.getEnrolledMembers().indexOf(selectedMember, 0) === -1) {
+            selectedAffair.getEnrolledMembers().push(selectedMember);
+        }
+        else {
+            console.log("\nMember already is registered for " + selectedAffair.getName());
+        }
     };
-    //============= Finding Methods =============//
-    //Search Members list
-    //--Used in UI.showSearchMembersMenu : string | undefined)
+    /**
+     *
+     * @returns an array of strings : member names
+     */
     AffairManager.prototype.findMemberNames = function () {
         return this.filterListForNames(this.membersList); //Extract names from list, store in fitlered list
     };
@@ -52,29 +89,90 @@ var AffairManager = /** @class */ (function () {
     };
     //============= Modify Methods =============//
     //--Used in UI.showModifyAffairMenu(em : AffairManager, affairName? : string)
-    AffairManager.prototype.modifyAffair = function (affairName, newTitle, newTime) {
+    AffairManager.prototype.modifyAffair = function (affairName, newName, newTime) {
+        if (newName === void 0) { newName = undefined; }
+        if (newTime === void 0) { newTime = undefined; }
+        var selectedAffair;
+        for (var i = 0; i < this.affairsList.length; i++) {
+            if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
+                selectedAffair = this.affairsList[i];
+            }
+        }
+        //Edit Title
+        if (newName !== undefined) {
+            selectedAffair.setName(newName);
+        }
+        if (newTime !== undefined) {
+            selectedAffair.setDate(newTime);
+        }
     };
-    //============= Misc Methods ===============/
-    //-- Used in UI.showAddToOrganizationMenu(em : AffairManager, organizationName? : string, affairName? : string)
     AffairManager.prototype.addAffairToOrganization = function (affairName, organizationName) {
+        var selectedOrganization;
+        var selectedAffair;
+        for (var i = 0; i < this.organizationList.length; i++) {
+            if (organizationName.toLowerCase() === this.organizationList[i].getName().toLowerCase()) {
+                selectedOrganization = this.organizationList[i];
+            }
+        }
+        for (var i = 0; i < this.affairsList.length; i++) {
+            if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
+                selectedAffair = this.affairsList[i];
+            }
+        }
+        if (selectedOrganization.getAffairsHostedList().indexOf(selectedAffair, 0) === -1) {
+            selectedOrganization.getAffairsHostedList().push(selectedAffair);
+        }
+        else {
+            console.log("\nAffair already is registered as an event for " + selectedOrganization.getName());
+        }
     };
+    /**
+     * Helper function to filter lists from Organization & Affair objects
+     */
     AffairManager.prototype.filterListForNames = function (list) {
         var extractedNames = [];
         for (var i = 0; i < list.length; i++) {
             extractedNames[i] = list[i].getName();
         }
-        console.log("Extracted names length: " + extractedNames.length);
         return extractedNames;
     };
-    //-- Used in UI.showListAffairMambers(em : AffairManager)
     AffairManager.prototype.getMembers = function (affairName) {
-        var affairMemebrs;
         for (var i = 0; i < this.affairsList.length; i++) {
             if (affairName.toLowerCase() === this.affairsList[i].getName().toLowerCase()) {
-                affairMemebrs = this.affairsList[i].getEnrolledMembers();
+                return this.affairsList[i].getEnrolledMembers();
             }
         }
-        return affairMemebrs;
+    };
+    AffairManager.prototype.getAffairs = function (organizationName) {
+        for (var i = 0; i < this.organizationList.length; i++) {
+            if (organizationName.toLowerCase() === this.organizationList[i].getName().toLowerCase()) {
+                return this.organizationList[i].getAffairsHostedList();
+            }
+        }
+    };
+    AffairManager.prototype.displayRegisteredMembers = function () {
+        console.log("\n-----Registered Members-----");
+        for (var i = 0; i < this.membersList.length; i++) {
+            console.log("~~~ Member #" + (i + 1) + " ~~~\n");
+            console.log("Name: " + this.membersList[i].getName());
+            console.log("Email: " + this.membersList[i].getEmail() + "\n");
+        }
+    };
+    AffairManager.prototype.displayRegisteredAffairs = function () {
+        console.log("\n-----Registered Affairs-----");
+        for (var i = 0; i < this.affairsList.length; i++) {
+            console.log("~~~ Affair #" + (i + 1) + " ~~~:\n");
+            console.log("Name: " + this.affairsList[i].getName());
+            console.log("Zipcode: " + this.affairsList[i].getZipcode());
+            console.log("Date: " + this.affairsList[i].getDate() + "\n");
+        }
+    };
+    AffairManager.prototype.displayRegisteredOrganizations = function () {
+        console.log("\n-----Registered Organizations -----");
+        for (var i = 0; i < this.organizationList.length; i++) {
+            console.log("~~~ Organization #" + (i + 1) + " ~~~\n");
+            console.log("Name: " + this.organizationList[i].getName() + "\n");
+        }
     };
     return AffairManager;
 }());

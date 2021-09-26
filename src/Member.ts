@@ -6,13 +6,14 @@ export class Member {
 
     //Constructors
     constructor(name : string, email : string | undefined){
+        
         this.name = name;
         this.email = email;
     }
 
     //Getters
     getName() : string | undefined { return this.name }
-    getEmail() : string | undefined { return this.name }
+    getEmail() : string | undefined { return this.email }
 
     //Setters
     setName(name : string)   { this.name = name; }

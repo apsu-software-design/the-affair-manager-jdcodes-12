@@ -5,6 +5,7 @@
 exports.__esModule = true;
 exports.start = void 0;
 var readlineSync = require("readline-sync"); //for easier repeated prompts
+var Affairs_1 = require("./Affairs");
 var manager_1 = require("./manager");
 /**
  * Function to run the UI
@@ -18,9 +19,9 @@ exports.start = start;
  */
 function showMainMenu(em) {
     while (true) { //run until we exit
-        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  9. Display Affairs\n  10. Display Members\n  11. Display Organizations\n  8. Exit");
+        console.log("Welcome to the Affair Manager! Pick an option:\n  1. Register a new member\n  2. Register a new affair\n  3. Register a new organization\n  4. Add a member to an affair\n  5. Modify an affair\n  6. Add an affair to an organization\n  7. List affair members\n  8. List organization affairs\n  9. Exit");
         var response = readlineSync.question('> ');
-        if (response === '8' || response.slice(0, 2).toLowerCase() === ':q') {
+        if (response === '9' || response.slice(0, 2).toLowerCase() === ':q') {
             break; //stop looping, thus leaving method
         }
         switch (response) { //handle each response
@@ -45,21 +46,38 @@ function showMainMenu(em) {
             case '7':
                 showListAffairMembersMenu(em);
                 break;
-            //case 8 handled above
+            case '8':
+                showListOrganizationAffairsMenu(em);
+                break;
+            case '10':
+                em.displayRegisteredMembers();
+                break;
+            case '11':
+                em.displayRegisteredAffairs();
+                break;
+            case '12':
+                em.displayRegisteredOrganizations();
+                break;
+            //case 9 handled above
             default: console.log('Invalid option!');
         }
         console.log(''); //extra empty line for revisiting
     }
 }
 /**
- * Show menu to add a new member
+ * Prompts to get Member data, adds member to memberList
  */
 function showNewMemberMenu(em) {
     console.log('Add a new member.');
     var name = readlineSync.question('  Name: ');
     var email = readlineSync.question('  Email: ');
-    em.addMember(name, email);
-    console.log('User added!');
+    if (em.addMember(name, email) !== undefined) {
+        console.log("User is already added...\n");
+    }
+    else {
+        em.addMember(name, email);
+        console.log('User added!');
+    }
 }
 /**
  * Show menu to add a new affair. Will then show menu to add members to the affair
@@ -69,8 +87,14 @@ function showNewAffairMenu(em) {
     var affairName = readlineSync.question('  Title of affair: ');
     var zipcode = readlineSync.question('  Location (zip code): ');
     var date = readlineSync.question('  Date and time (ex: Jan 21 2017 13:00 PST): ');
-    em.addAffair(affairName, zipcode, date);
-    showAddToAffairMenu(em, affairName); //add users to new affair
+    if (em.addAffair(affairName, zipcode, date) !== undefined) {
+        console.log("Affair is already added...\n");
+    }
+    else {
+        em.addAffair(affairName, zipcode, date);
+        console.log("Affair added!\n");
+        showAddToAffairMenu(em, affairName); //add users to new affair
+    }
 }
 /**
  * Show menu to add a new organization. Will then show menu to add affairs to the organization
@@ -78,11 +102,16 @@ function showNewAffairMenu(em) {
 function showNewOrganizationMenu(em) {
     console.log('Add a new organization.');
     var organizationName = readlineSync.question('  Title of organization: ');
-    em.addOrganization(organizationName);
-    var adding = readlineSync.question('Add affairs to organization? (y/n): ');
-    while (adding.toLowerCase().startsWith('y')) { //while adding members    
-        showAddToOrganizationMenu(em, organizationName); //add affairs to new organization
-        adding = readlineSync.question('Add another affair? (y/n): ');
+    if (em.addOrganization(organizationName) !== undefined) {
+        console.log("Organization is already registered...\n");
+    }
+    else {
+        em.addOrganization(organizationName);
+        var adding = readlineSync.question('Add affairs to organization? (y/n): ');
+        while (adding.toLowerCase().startsWith('y')) { //while adding members    
+            showAddToOrganizationMenu(em, organizationName); //add affairs to new organization
+            adding = readlineSync.question('Add another affair? (y/n): ');
+        }
     }
 }
 /**
@@ -132,7 +161,7 @@ function showSearchOrganizationsMenu(em) {
  * Helper function that prompts the user for a query.
  */
 function _promptForQuery(type) {
-    console.log("Searching for a " + type + ".");
+    console.log("\nSearching for a " + type + ".");
     return readlineSync.question('Search query: ');
 }
 /**
@@ -141,14 +170,14 @@ function _promptForQuery(type) {
  */
 function _searchListMenu(type, results) {
     if (results.length > 0) {
-        console.log('Results found: ');
+        console.log('\nResults found: ');
         var resultsDisplay = '  ' + (results.map(function (item, idx) { return idx + 1 + ". " + item; }).join('\n  '));
         console.log(resultsDisplay);
-        var choiceIdx = parseInt(readlineSync.question("Choose a " + type + " (1-" + results.length + "): ")); //will covert to number or NaN
+        var choiceIdx = parseInt(readlineSync.question("\nChoose a " + type + " (1-" + results.length + "): ")); //will covert to number or NaN
         return results[choiceIdx - 1]; //will return undefined if invalid index
     }
     else {
-        console.log('No results found.');
+        console.log('\nNo results found.');
         return undefined;
     }
 }
@@ -163,15 +192,17 @@ function showModifyAffairMenu(em, affairName) {
         } //if didn't select an affair
     }
     while (true) { //run until we exit
-        console.log("Edit affair '" + affairName + "'.\n  1. Change title\n  2. Change time\n  3. Add to organization\n  4. Return to previous menu");
+        console.log("\nEdit affair '" + affairName + "'.\n  1. Change title\n  2. Change time\n  3. Add to organization\n  4. Return to previous menu");
         var response = parseInt(readlineSync.question('> '));
         if (response == 1) {
             var newTitle = readlineSync.question('  New title: ');
             em.modifyAffair(affairName, newTitle, undefined);
+            console.log("\nTitle changed to: " + affairName);
         }
         else if (response == 2) {
             var newTime = readlineSync.question('  New date and time (ex: Jan 21 2017 13:00 PST): ');
             em.modifyAffair(affairName, undefined, newTime); //no name to change
+            console.log("\nTime changed to: " + newTime);
         }
         else if (response == 3) {
             showAddToOrganizationMenu(em, undefined, affairName);
@@ -209,7 +240,20 @@ function showAddToOrganizationMenu(em, organizationName, affairName) {
 function showListAffairMembersMenu(em) {
     var affairName = showSearchAffairsMenu(em);
     var members = em.getMembers(affairName);
-    console.log('Members participating in this action:');
-    console.log('  ' + members.join('\n  ') + '\n');
+    console.log("\n:--: Members participating in this affair :--:");
+    for (var i = 0; i < members.length; i++) {
+        console.log("Name: " + members[i].getName());
+        console.log("Email: " + members[i].getEmail() + "\n");
+    }
     readlineSync.keyInPause('(Press any letter to continue)', { guide: false }); //so have time to read stuff
+}
+function showListOrganizationAffairsMenu(em) {
+    var organizationName = showSearchOrganizationsMenu(em);
+    var affairs = em.getAffairs(organizationName);
+    console.log(":--: Organizations registered Affairs :--:");
+    for (var i = 0; i < Affairs_1.Affairs.length; i++) {
+        console.log("Name: " + affairs[i].getName());
+        console.log("Zipcode: " + affairs[i].getZipcode());
+        console.log("Date: " + affairs[i].getDate() + "\n");
+    }
 }

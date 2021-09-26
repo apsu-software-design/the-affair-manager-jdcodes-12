@@ -6,7 +6,7 @@ export class Organization {
     //Fields
     private name : string;
     private affairsHosted : Affairs[];
-    private organizationMembers : Organization[];
+    private organizationMembers : Member[];
 
     //Constructors
     constructor(name : string){
@@ -18,7 +18,7 @@ export class Organization {
     //Getters
     getName() : string | undefined { return this.name; }
     getAffairsHostedList() : Affairs[] { return this.affairsHosted; }
-    getOrganizationMembersList() : Organization[] { return this.organizationMembers; }
+    getOrganizationMembersList() : Member[] { return this.organizationMembers; }
 
     //Setters
     setName(name : string) { this.name = name; }

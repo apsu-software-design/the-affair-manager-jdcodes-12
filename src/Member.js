@@ -9,7 +9,7 @@ var Member = /** @class */ (function () {
     }
     //Getters
     Member.prototype.getName = function () { return this.name; };
-    Member.prototype.getEmail = function () { return this.name; };
+    Member.prototype.getEmail = function () { return this.email; };
     //Setters
     Member.prototype.setName = function (name) { this.name = name; };
     Member.prototype.setEmail = function (email) { this.email = email; };
